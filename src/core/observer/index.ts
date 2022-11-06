@@ -55,6 +55,7 @@ export class Observer {
     this.dep = mock ? mockDep : new Dep()
     this.vmCount = 0
     def(value, '__ob__', this)
+    // 处理数组响应式
     if (isArray(value)) {
       if (!mock) {
         if (hasProto) {
@@ -76,6 +77,7 @@ export class Observer {
        * Walk through all properties and convert them into
        * getter/setters. This method should only be called when
        * value type is Object.
+       * 处理对象响应式
        */
       const keys = Object.keys(value)
       for (let i = 0; i < keys.length; i++) {
@@ -102,6 +104,7 @@ export class Observer {
  * returns the new observer if successfully observed,
  * or the existing observer if the value already has one.
  */
+// 响应式处理入口
 export function observe(
   value: any,
   shallow?: boolean,
@@ -111,6 +114,7 @@ export function observe(
     return
   }
   let ob: Observer | void
+  // 判断value是否有__ob__，如果有就说明已经被响应式处理
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
   } else if (
@@ -120,6 +124,7 @@ export function observe(
     Object.isExtensible(value) &&
     !value.__v_skip /* ReactiveFlags.SKIP */
   ) {
+    // 没有被响应式处理, 将新的
     ob = new Observer(value, shallow, ssrMockReactivity)
   }
   return ob
@@ -137,7 +142,7 @@ export function defineReactive(
   mock?: boolean
 ) {
   const dep = new Dep()
-
+  // 获取对象上的描述符
   const property = Object.getOwnPropertyDescriptor(obj, key)
   if (property && property.configurable === false) {
     return

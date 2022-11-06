@@ -24,6 +24,7 @@ const methodsToPatch = [
  */
 methodsToPatch.forEach(function (method) {
   // cache original method
+  // 拿到key 对应的方法
   const original = arrayProto[method]
   def(arrayMethods, method, function mutator(...args) {
     const result = original.apply(this, args)
@@ -38,6 +39,7 @@ methodsToPatch.forEach(function (method) {
         inserted = args.slice(2)
         break
     }
+    // 如果执行时push unshift splice 操作的话，进行响应式处理
     if (inserted) ob.observeArray(inserted)
     // notify change
     if (__DEV__) {

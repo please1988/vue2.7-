@@ -64,6 +64,12 @@ export default class Watcher implements DepTarget {
   onTrack?: ((event: DebuggerEvent) => void) | undefined
   onTrigger?: ((event: DebuggerEvent) => void) | undefined
 
+  //  watchers[key] = new Watcher(
+  //   vm,
+  //   getter || noop,
+  //   noop,
+  //   computedWatcherOptions
+  // )
   constructor(
     vm: Component | null,
     expOrFn: string | (() => any),
@@ -149,6 +155,7 @@ export default class Watcher implements DepTarget {
 
   /**
    * Add a dependency to this directive.
+   * 将dep放到watcher中
    */
   addDep(dep: Dep) {
     const id = dep.id
@@ -156,6 +163,7 @@ export default class Watcher implements DepTarget {
       this.newDepIds.add(id)
       this.newDeps.push(dep)
       if (!this.depIds.has(id)) {
+        // 将watcher 自己放到dep中，双向收集
         dep.addSub(this)
       }
     }

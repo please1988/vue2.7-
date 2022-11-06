@@ -34,13 +34,17 @@ export function initMixin(Vue: typeof Component) {
     vm.__v_skip = true
     // effect scope
     vm._scope = new EffectScope(true /* detached */)
+    // 处理组件配置项
     // merge options
+    // 如果是子组件
     if (options && options._isComponent) {
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
       // internal component options needs special treatment.
+      // 子组建：性能优化，减少原型链的动态查找，提高执行效率
       initInternalComponent(vm, options as any)
     } else {
+      // 跟组件走这里：选项合并，将全局配置选项合并到跟组件的局部配置上
       vm.$options = mergeOptions(
         resolveConstructorOptions(vm.constructor as any),
         options || {},
@@ -76,11 +80,12 @@ export function initMixin(Vue: typeof Component) {
     }
   }
 }
-
+// 性能优化，打平配置对象上的属性，减少运行时原型链的查找，提高执行效率
 export function initInternalComponent(
   vm: Component,
   options: InternalComponentOptions
 ) {
+  // 基于构造函数上的配置创建 vm.$options
   const opts = (vm.$options = Object.create((vm.constructor as any).options))
   // doing this because it's faster than dynamic enumeration.
   const parentVnode = options._parentVnode
@@ -93,6 +98,7 @@ export function initInternalComponent(
   opts._renderChildren = vnodeComponentOptions.children
   opts._componentTag = vnodeComponentOptions.tag
 
+  // 如果有render函数，将其赋值到vm.$options上
   if (options.render) {
     opts.render = options.render
     opts.staticRenderFns = options.staticRenderFns
@@ -100,6 +106,7 @@ export function initInternalComponent(
 }
 
 export function resolveConstructorOptions(Ctor: typeof Component) {
+  //
   let options = Ctor.options
   if (Ctor.super) {
     const superOptions = resolveConstructorOptions(Ctor.super)
