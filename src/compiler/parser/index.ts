@@ -234,6 +234,16 @@ export function parse(template: string, options: CompilerOptions): ASTElement {
       }
 
       let element: ASTElement = createASTElement(tag, attrs, currentParent)
+
+      // {
+      //   type: 1,
+      //   tag,
+      //   attrsList: attrs,
+      //   attrsMap: makeAttrsMap(attrs),
+      //   rawAttrsMap: {},
+      //   parent,
+      //   children: []
+      // }
       if (ns) {
         element.ns = ns
       }
@@ -401,6 +411,7 @@ export function parse(template: string, options: CompilerOptions): ASTElement {
         }
       }
     },
+    // 处理注释内容
     comment(text: string, start, end) {
       // adding anything as a sibling to the root node is forbidden
       // comments should still be allowed, but ignored

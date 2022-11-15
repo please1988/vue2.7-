@@ -55,8 +55,10 @@ export class Observer {
     this.dep = mock ? mockDep : new Dep()
     this.vmCount = 0
     def(value, '__ob__', this)
+    console.log(value)
     // 处理数组响应式
     if (isArray(value)) {
+      console.log('来的是数组')
       if (!mock) {
         if (hasProto) {
           /* eslint-disable no-proto */
@@ -79,6 +81,7 @@ export class Observer {
        * value type is Object.
        * 处理对象响应式
        */
+      console.log('来的是对象')
       const keys = Object.keys(value)
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i]
@@ -242,6 +245,7 @@ export function set(
     return
   }
   const ob = (target as any).__ob__
+  // 处理数组的情况，数组传递的是index
   if (isArray(target) && isValidArrayIndex(key)) {
     target.length = Math.max(target.length, key)
     target.splice(key, 1, val)

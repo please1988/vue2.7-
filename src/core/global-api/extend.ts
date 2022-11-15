@@ -21,6 +21,7 @@ export function initExtend(Vue: GlobalAPI) {
     extendOptions = extendOptions || {}
     const Super = this
     const SuperId = Super.cid
+    // 同一个配置项多次调用 Vue.extend 方法时，第二次调用开始就会使用缓存
     const cachedCtors = extendOptions._Ctor || (extendOptions._Ctor = {})
     if (cachedCtors[SuperId]) {
       return cachedCtors[SuperId]
@@ -31,7 +32,7 @@ export function initExtend(Vue: GlobalAPI) {
     if (__DEV__ && name) {
       validateComponentName(name)
     }
-
+    // 定义了一个Vue子类
     const Sub = function VueComponent(this: any, options: any) {
       this._init(options)
     } as unknown as typeof Component
