@@ -16,10 +16,11 @@ import {
   defineReactive
 } from '../util/index'
 import type { GlobalAPI } from 'types/global-api'
-
+// 初始化全局api入口
 export function initGlobalAPI(Vue: GlobalAPI) {
   // config
   const configDef: Record<string, any> = {}
+  // vue全局默认的配置
   configDef.get = () => config
   if (__DEV__) {
     configDef.set = () => {
@@ -28,8 +29,8 @@ export function initGlobalAPI(Vue: GlobalAPI) {
       )
     }
   }
+  // 将配置代理到Vue对象上，通过Vue.config 的方式访问
   Object.defineProperty(Vue, 'config', configDef)
-
   // exposed util methods.
   // NOTE: these are not considered part of the public API - avoid relying on
   // them unless you are aware of the risk.

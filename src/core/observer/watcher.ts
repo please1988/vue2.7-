@@ -202,8 +202,11 @@ export default class Watcher implements DepTarget {
     if (this.lazy) {
       this.dirty = true
     } else if (this.sync) {
+      // 同步执行时会走这
+      // 比如this.$watch() 或者watch 选项时，传递一个sync配置，比如 {sync, true}
       this.run()
     } else {
+      // 将当前wacher 放入watcher队列，一般都是走这里
       queueWatcher(this)
     }
   }

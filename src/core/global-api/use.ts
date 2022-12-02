@@ -11,6 +11,7 @@ export function initUse(Vue: GlobalAPI) {
     }
 
     // additional parameters
+    console.log(arguments, 'arguments')
     const args = toArray(arguments, 1)
     args.unshift(this)
     if (isFunction(plugin.install)) {

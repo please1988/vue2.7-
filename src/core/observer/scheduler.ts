@@ -172,9 +172,10 @@ export function queueWatcher(watcher: Watcher) {
   if (watcher === Dep.target && watcher.noRecurse) {
     return
   }
-
+  // 缓存一下置为true
   has[id] = true
   if (!flushing) {
+    // 如果 flushing = false, 表示当前watcher 队列没有在被刷新，直接入队
     queue.push(watcher)
   } else {
     // if already flushing, splice the watcher based on its id

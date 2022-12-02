@@ -83,6 +83,7 @@ export function parseHTML(html, options: HTMLParserOptions) {
       if (textEnd === 0) {
         // Comment:
         if (comment.test(html)) {
+          // 找到注释内容结束的索引
           const commentEnd = html.indexOf('-->')
 
           if (commentEnd >= 0) {
@@ -97,7 +98,7 @@ export function parseHTML(html, options: HTMLParserOptions) {
             continue
           }
         }
-
+        // 处理条件注释
         // http://en.wikipedia.org/wiki/Conditional_comment#Downlevel-revealed_conditional_comment
         if (conditionalComment.test(html)) {
           const conditionalEnd = html.indexOf(']>')
@@ -107,7 +108,7 @@ export function parseHTML(html, options: HTMLParserOptions) {
             continue
           }
         }
-
+        // 处理<!Doctype html>
         // Doctype:
         const doctypeMatch = html.match(doctype)
         if (doctypeMatch) {
