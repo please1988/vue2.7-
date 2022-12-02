@@ -8,19 +8,40 @@
   </head>
   <body>
     <div id="app">
-      <p>{{msg}}</p>
-      <comp></comp>
+      <p @click="getName">{{msg.a}}</p>
+      <comp>这是插槽</comp>
     </div>
     <script src="../../dist/vue.js"></script>
     <script>
       Vue.component('comp', {
-        template: '<div> i am comp</div>'
+        template: '<div> {{amg.a}}<slot></slot></div>',
+        inject: ['amg'],
+        created() {
+        }
       })
       let vue = new Vue({
         el: '#app',
         data() {
           return {
-            msg: 'hello ysw'
+            msg: {
+              a: 2222222222,
+              b: 'im b'
+            },
+
+          }
+        },
+        methods: {
+          getName() {
+            this.msg.a = 1111111
+            console.log(this.msg);
+          }
+        },
+        // provide: {
+        //   amg: 'amg'
+        // }
+        provide() {
+          return {
+            amg: this.msg
           }
         }
       })

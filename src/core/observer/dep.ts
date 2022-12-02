@@ -18,6 +18,12 @@ export interface DepTarget extends DebuggerOptions {
  * directives subscribing to it.
  * @internal
  */
+
+/**
+ * 一个 dep 对应一个 obj.key
+ * 在读取响应式数据时，负责收集依赖，每个 dep（或者说 obj.key）依赖的 watcher 有哪些
+ * 在响应式数据更新时，负责通知 dep 中那些 watcher 去执行 update 方法
+ */
 export default class Dep {
   static target?: DepTarget | null
   id: number
@@ -27,7 +33,7 @@ export default class Dep {
     this.id = uid++
     this.subs = []
   }
-
+  // 在dep中添加watcher
   addSub(sub: DepTarget) {
     this.subs.push(sub)
   }

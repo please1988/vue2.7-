@@ -769,7 +769,7 @@ function processComponent(el) {
     el.inlineTemplate = true
   }
 }
-
+// 处理模板属性
 function processAttrs(el) {
   const list = el.attrsList
   let i, l, name, rawName, value, modifiers, syncGen, isDynamic
@@ -788,7 +788,7 @@ function processAttrs(el) {
       } else if (modifiers) {
         name = name.replace(modifierRE, '')
       }
-      if (bindRE.test(name)) {
+      if (bindRE.test(name)) { // v-bind分支
         // v-bind
         name = name.replace(bindRE, '')
         value = parseFilters(value)
@@ -855,7 +855,7 @@ function processAttrs(el) {
         } else {
           addAttr(el, name, value, list[i], isDynamic)
         }
-      } else if (onRE.test(name)) {
+      } else if (onRE.test(name)) { // v-on分支
         // v-on
         name = name.replace(onRE, '')
         isDynamic = dynamicArgRE.test(name)
@@ -863,7 +863,7 @@ function processAttrs(el) {
           name = name.slice(1, -1)
         }
         addHandler(el, name, value, modifiers, false, warn, list[i], isDynamic)
-      } else {
+      } else { // 除了v-bind，v-on之外的普通指令
         // normal directives
         name = name.replace(dirRE, '')
         // parse arg
@@ -877,6 +877,7 @@ function processAttrs(el) {
             isDynamic = true
           }
         }
+         // 普通指令会在AST树上添加directives属性
         addDirective(
           el,
           name,

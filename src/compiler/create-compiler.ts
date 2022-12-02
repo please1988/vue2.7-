@@ -20,7 +20,7 @@ export function createCompilerCreator(baseCompile: Function): Function {
       ) => {
         ;(tip ? tips : errors).push(msg)
       }
-
+      // 合并options 配置和 baseOptions，将两者合并到finalOptions
       if (options) {
         if (__DEV__ && options.outputSourceRange) {
           // $flow-disable-line
@@ -65,7 +65,7 @@ export function createCompilerCreator(baseCompile: Function): Function {
       }
 
       finalOptions.warn = warn
-
+      // 执行 baseCompile 得到编译结果
       const compiled = baseCompile(template.trim(), finalOptions)
       if (__DEV__) {
         detectErrors(compiled.ast, warn)

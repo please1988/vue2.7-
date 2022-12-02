@@ -15,6 +15,7 @@ let uid = 0
 
 export function initMixin(Vue: typeof Component) {
   Vue.prototype._init = function (options?: Record<string, any>) {
+    // 这里传进来的options是
     const vm: Component = this
     // a uid
     vm._uid = uid++
@@ -59,12 +60,21 @@ export function initMixin(Vue: typeof Component) {
     }
     // expose real self
     vm._self = vm
+     // 初始化组件实例关系属性，比如 $parent、$children、$root、$refs 等
     initLifecycle(vm)
+     /**
+     * 初始化自定义事件，这里需要注意一点，所以我们在 <comp @click="handleClick" /> 上注册的事件，监听者不是父组件，
+     * 而是子组件本身，也就是说事件的派发和监听者都是子组件本身，和父组件无关
+     */
     initEvents(vm)
+    // 解析组件的插槽信息，得到 vm.$slot，处理渲染函数，得到 vm.$createElement 方法，即 h 函数
     initRender(vm)
     callHook(vm, 'beforeCreate', undefined, false /* setContext */)
+    // 初始化组件的 inject 配置项，得到 result[key] = val 形式的配置对象，然后对结果数据进行响应式处理，并代理每个 key 到 vm 实例
     initInjections(vm) // resolve injections before data/props
+    // 数据响应式的重点，处理 props、methods、data、computed、watch
     initState(vm)
+    // 解析组件配置项上的 provide 对象，将其挂载到 vm._provided 属性上
     initProvide(vm) // resolve provide after data/props
     callHook(vm, 'created')
 
@@ -106,8 +116,9 @@ export function initInternalComponent(
 }
 
 export function resolveConstructorOptions(Ctor: typeof Component) {
-  //
+  // 拿到配置项
   let options = Ctor.options
+  
   if (Ctor.super) {
     const superOptions = resolveConstructorOptions(Ctor.super)
     const cachedSuperOptions = Ctor.superOptions

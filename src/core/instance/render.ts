@@ -23,7 +23,9 @@ export function initRender(vm: Component) {
   vm._staticTrees = null // v-once cached trees
   const options = vm.$options
   const parentVnode = (vm.$vnode = options._parentVnode!) // the placeholder node in parent tree
+  console.log(parentVnode, 'parentVnode');
   const renderContext = parentVnode && (parentVnode.context as Component)
+  console.log(renderContext, 'renderContext');
   vm.$slots = resolveSlots(options._renderChildren, renderContext)
   vm.$scopedSlots = parentVnode
     ? normalizeScopedSlots(

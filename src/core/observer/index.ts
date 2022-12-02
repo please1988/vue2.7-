@@ -54,8 +54,10 @@ export class Observer {
     // this.value = value
     this.dep = mock ? mockDep : new Dep()
     this.vmCount = 0
+    // 在value属性上设置__ob__属性
     def(value, '__ob__', this)
     // 处理数组响应式
+    console.log(arrayMethods,'console.log(arrayMethods)')
     if (isArray(value)) {
       if (!mock) {
         if (hasProto) {
@@ -114,7 +116,7 @@ export function observe(
     return
   }
   let ob: Observer | void
-  // 判断value是否有__ob__，如果有就说明已经被响应式处理
+  // 判断value是否有__ob__，如果有就说明已经做过观察，也就是响应式处理
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
   } else if (
@@ -124,7 +126,6 @@ export function observe(
     Object.isExtensible(value) &&
     !value.__v_skip /* ReactiveFlags.SKIP */
   ) {
-    // 没有被响应式处理, 将新的
     ob = new Observer(value, shallow, ssrMockReactivity)
   }
   return ob
@@ -164,6 +165,8 @@ export function defineReactive(
     configurable: true,
     get: function reactiveGetter() {
       const value = getter ? getter.call(obj) : val
+      console.log(Dep.target, 'Dep.target');
+      
       if (Dep.target) {
         if (__DEV__) {
           dep.depend({

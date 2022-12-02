@@ -16,13 +16,14 @@ const idToTemplate = cached(id => {
   const el = query(id)
   return el && el.innerHTML
 })
-
+// 将$mount进行备份
 const mount = Vue.prototype.$mount
-// 在这里进行了函数的劫持
+// 在这里进行了函数复写
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
+  // 得到挂载点
   el = el && query(el) // 获取元素
 
   /* istanbul ignore if */
@@ -33,7 +34,7 @@ Vue.prototype.$mount = function (
       )
     return this
   }
-
+  // 获取选项
   const options = this.$options
   // resolve template/el and convert to render function
   if (!options.render) {
@@ -71,10 +72,13 @@ Vue.prototype.$mount = function (
       const { render, staticRenderFns } = compileToFunctions(
         template,
         {
+          // 标记HTML模板字符串中的开始和结束位置
           outputSourceRange: __DEV__,
           shouldDecodeNewlines,
           shouldDecodeNewlinesForHref,
+          // 界定符{{}}
           delimiters: options.delimiters,
+          // 是否保留注释
           comments: options.comments
         },
         this

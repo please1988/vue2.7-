@@ -108,6 +108,9 @@ export default class Watcher implements DepTarget {
     this.newDepIds = new Set()
     this.expression = __DEV__ ? expOrFn.toString() : ''
     // parse expression for getter
+    // updateComponent = () => {
+    //   vm._update(vm._render(), hydrating)
+    // }
     if (isFunction(expOrFn)) {
       this.getter = expOrFn
     } else {
